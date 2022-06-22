@@ -13,6 +13,29 @@ Ext.define('Fin.Application', {
 		this.removeSplash()
 		var whichView = 'mainview'
 		Ext.Viewport.add([{xtype: whichView}])
+
+
+		var dialog = Ext.create({
+			xtype: 'dialog',
+			header: false,
+			layout: 'fit',
+			width: 400,
+			height: 500,
+			items: [
+				{
+					xclass: 'Finn.view.CompanySearch',
+					listeners: {
+						select: function(symbol) {
+							window._co = Ext.create('Finn.model.CompanyProfile', { ticker: symbol });
+
+							dialog.close();
+						}
+					}
+				}
+			]
+		});
+			
+		dialog.show();
 	},
 
 	onAppUpdate: function () {

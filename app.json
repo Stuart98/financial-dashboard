@@ -112,6 +112,7 @@
     ]
   },
   "development": {
+    "finnhub": "qwerty",
     "js": [
       {"path": "app.js", "bundle": true},
       {"path": "main.js"}
