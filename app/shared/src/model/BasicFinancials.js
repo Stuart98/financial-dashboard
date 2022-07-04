@@ -14,8 +14,11 @@ Ext.define('Fin.model.BasicFinancials', {
         getFinnhubParams: function(request) {
             return [
                 request.getParams()[this.getIdParam()], // get ID
-                'all' // metric
+                'price' // metric
             ];
+        },
+        extractResponse: function(data) {
+            return data.body.metric;
         }
     }
 })

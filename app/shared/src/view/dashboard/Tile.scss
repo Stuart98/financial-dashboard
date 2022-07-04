@@ -1,0 +1,55 @@
+.tile {
+    box-shadow: 0 0 8px 0px rgba(0, 0, 0, 0.1);
+    border: solid 1px #dde4eb;
+    border-radius: 0px;
+    margin: 20px;
+    background: #ffffff;
+    
+    .row {
+        display: flex;
+        align-items: center;
+        margin: 5px 0;
+
+        &.full-height {
+            height: 100%;
+        }
+
+        h4 {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        img {
+            height: 40px;
+        }
+
+        .col {
+            margin: 0 20px;
+            flex: 1
+        }
+    }
+
+    .label {
+        margin-right: 5px;
+    }
+    .value {
+        font-weight: bold;
+    }
+
+    .label-large {
+        display: block;
+        color: #0d6efd;
+        font-size: 15px;
+        font-weight: 600;
+    }
+    .value-large {
+        display: block;
+        font-size: 27px;
+        font-weight: 600;
+        color: #212529;
+    }
+
+    .x-innerhtml {
+        height: 100%;
+    }
+}

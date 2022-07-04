@@ -12,7 +12,9 @@ Ext.define('Fin.Application', {
 	launch: function () {
 		this.removeSplash()
 		var whichView = 'mainview'
-		Ext.Viewport.add([{xtype: whichView}])
+
+		var mainView = Ext.create('Fin.view.main.MainView');
+		Ext.Viewport.add(mainView);
 
 
 		var dialog = Ext.create({
@@ -35,7 +37,12 @@ Ext.define('Fin.Application', {
 			]
 		});
 			
-		dialog.show();
+		//dialog.show();
+		var record = Ext.create('Finn.model.CompanyProfile', { ticker: 'SHEL' }, null, function(rec) {
+			mainView.getViewModel().set('companyRecord', rec);
+		});
+
+		window._co = record;
 	},
 
 	onAppUpdate: function () {

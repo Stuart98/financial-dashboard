@@ -1,6 +1,6 @@
 //this file exists so the webpack build process will succeed
 Ext._finnhub = require('finnhub');
-Ext._finnhubApiKey = 'capdc7aad3iahju4gbvg';
+Ext._finnhubApiKey = 'caq46jqad3i1rqbdl5q0';
 
 
 // set up Finnhub API module

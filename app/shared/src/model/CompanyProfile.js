@@ -1,14 +1,31 @@
 Ext.define('Finn.model.CompanyProfile', {
     extend: 'Ext.data.Model',
 
-    idProperty: 'ticker',
+    requires: [
+        'Fin.util.Formatter',
+        'Ext.data.identifier.Uuid'
+    ],
+
+    identifier: 'uuid',
 
     fields: [
         'country',
         'currency',
         'exchange',
         'ipo',
-        'marketCapitalization',
+        {
+            name: 'marketCapitalization',
+            // convert to dollars
+            convert: function(val) {
+                return val * 1000000;
+            }
+        },
+        {
+            name: 'marketCap',
+            calculate: function(data) {
+                return Fin.util.Formatter.numberFormat(data.marketCapitalization, 3);
+            }
+        },
         'name',
         'phone',
         'shareOutstanding',
@@ -53,30 +70,43 @@ Ext.define('Finn.model.CompanyProfile', {
         }
     ],
 
-    constructor: function() {
+    constructor: function(data, session, onLoadCallback) {
+        var me = this;
         this.callParent(arguments);
 
-        this.load();
+        Promise.all([
+            new Promise((resolve) => {
+                me.load(this.get('ticker'), {
+                    callback: resolve
+                });
+            }),
+            new Promise(function(resolve) {
+                Fin.model.BasicFinancials.load(me.get('ticker'), {
+                    callback: resolve
+                })
+            })
+        ]).then((loadRecords) => {
+            me.setBasicFinancials(loadRecords[1]);
+
+            this.earningsCalendar().getProxy().setExtraParams({
+                symbol: this.get('ticker')
+            });
+            this.stockCandles().getProxy().setExtraParams({
+                symbol: this.get('ticker')
+            });
+            this.recommendationTrends().getProxy().setExtraParams({
+                symbol: this.get('ticker')
+            });
+
+
+            this.earningsCalendar().load();
+            this.stockCandles().load();
+            this.recommendationTrends().load();
+            this.trades().setSymbol(this.get('ticker'));
+            this.trades().initWebSocket();
+
+            onLoadCallback(me);
+        });
         
-        this.setBasicFinancials(Fin.model.BasicFinancials.load(this.getId()));
-
-        this.earningsCalendar().getProxy().setExtraParams({
-            symbol: this.getId()
-        });
-        this.stockCandles().getProxy().setExtraParams({
-            symbol: this.getId()
-        });
-        this.recommendationTrends().getProxy().setExtraParams({
-            symbol: this.getId()
-        });
-
-
-        this.earningsCalendar().load();
-        this.stockCandles().load();
-        this.recommendationTrends().load();
-        this.trades().setSymbol(this.getId());
-        this.trades().initWebSocket();
     }
-}, function(cls) {
-    
-})
+});

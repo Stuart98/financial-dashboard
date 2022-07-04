@@ -41,7 +41,9 @@ Ext.define('Finn.data.WebSocketStore', {
 
     subscribe: function(symbol) {
         var doSubscribe = function() {
-            this.socket.send(JSON.stringify({'type': 'subscribe', 'symbol': symbol}));
+            if (!Ext.isEmpty(symbol)) {
+                this.socket.send(JSON.stringify({'type': 'subscribe', 'symbol': symbol}));
+            }
         }
         if (this._wsIsOpen) {
             doSubscribe();

@@ -4,7 +4,7 @@ Ext.define('Finn.view.CompanySearch', {
     alias: 'widget.CompanySearch',
 
     requires: [
-        'Ext.grid.Grid'
+        'Ext.dataview.List'
     ],
 
     layout: {
@@ -43,17 +43,6 @@ Ext.define('Finn.view.CompanySearch', {
             flex: 1,
             border: true,
             itemTpl: '<div class="item"><strong>{description}</strong><div>{symbol}</div></div>',
-            columns: [
-                {
-                    text: 'Name',
-                    flex: 1,
-                    dataIndex: 'description'
-                },
-                {
-                    text: 'Symbol',
-                    dataIndex: 'symbol'
-                }
-            ],
             bind: {
                 store: '{results}',
                 selection: '{selection}'
