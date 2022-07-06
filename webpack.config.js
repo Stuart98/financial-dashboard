@@ -10,7 +10,9 @@ module.exports = async function (env) {
   const rules = [
     { test: /.(js)$/, use: ['babel-loader'] }
   ]
-  const resolve = {}
+  const resolve = {
+    fallback: { 'querystring': require.resolve('querystring-es3') }
+  }
   const host = '0.0.0.0'
   const stats = 'none'
 

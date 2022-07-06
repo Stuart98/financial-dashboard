@@ -11,6 +11,6 @@ Ext.define('Fin.view.main.MainView', {
     layout: 'fit',
     items: [
         { xtype: 'headerview', reference: 'headerview', docked: 'top',    bind: {height: '{headerview_height}'} },
-        { xtype: 'centerview', reference: 'centerview' }
+        { xtype: 'Dashboard', reference: 'centerview' }
     ]
 });

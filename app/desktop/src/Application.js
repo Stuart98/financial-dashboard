@@ -12,7 +12,36 @@ Ext.define('Fin.Application', {
 	launch: function () {
 		this.removeSplash()
 		var whichView = 'mainview'
-		Ext.Viewport.add([{xtype: whichView}])
+
+
+
+		var dialog = Ext.create({
+			xtype: 'dialog',
+			header: false,
+			layout: 'fit',
+			width: 400,
+			height: 500,
+			items: [
+				{
+					xclass: 'Fin.view.CompanySearch',
+					listeners: {
+						select: function(symbol) {
+					
+							Fin.model.CompanyProfile.loadCompany(symbol, function(rec) {
+								var mainView = Ext.create('Fin.view.main.MainView');
+								Ext.Viewport.add(mainView);
+								
+								mainView.getViewModel().set('companyRecord', rec);
+
+								dialog.close();
+							});
+						}
+					}
+				}
+			]
+		});
+			
+		dialog.show();
 	},
 
 	onAppUpdate: function () {

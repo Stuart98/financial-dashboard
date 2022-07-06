@@ -6,7 +6,8 @@
   "template": "moderndesktop",
   "indexHtmlPath": "index.html",
   "requires": [
-    "font-awesome"
+    "font-awesome",
+    "charts"
   ],
 
   "builds": {
@@ -112,6 +113,7 @@
     ]
   },
   "development": {
+    "finnhub": "qwerty",
     "js": [
       {"path": "app.js", "bundle": true},
       {"path": "main.js"}
