@@ -13,8 +13,6 @@ Ext.define('Fin.Application', {
 		this.removeSplash()
 		var whichView = 'mainview'
 
-		var mainView = Ext.create('Fin.view.main.MainView');
-		Ext.Viewport.add(mainView);
 
 
 		var dialog = Ext.create({
@@ -25,24 +23,25 @@ Ext.define('Fin.Application', {
 			height: 500,
 			items: [
 				{
-					xclass: 'Finn.view.CompanySearch',
+					xclass: 'Fin.view.CompanySearch',
 					listeners: {
 						select: function(symbol) {
-							window._co = Ext.create('Finn.model.CompanyProfile', { ticker: symbol });
+					
+							Fin.model.CompanyProfile.loadCompany(symbol, function(rec) {
+								var mainView = Ext.create('Fin.view.main.MainView');
+								Ext.Viewport.add(mainView);
+								
+								mainView.getViewModel().set('companyRecord', rec);
 
-							dialog.close();
+								dialog.close();
+							});
 						}
 					}
 				}
 			]
 		});
 			
-		//dialog.show();
-		var record = Ext.create('Finn.model.CompanyProfile', { ticker: 'SHEL' }, null, function(rec) {
-			mainView.getViewModel().set('companyRecord', rec);
-		});
-
-		window._co = record;
+		dialog.show();
 	},
 
 	onAppUpdate: function () {

@@ -1,10 +1,10 @@
-Ext.define('Finn.store.Trades', {
+Ext.define('Fin.store.Trades', {
     extend: 'Ext.data.Store',
 
     alias: 'store.Trades',
 
     mixins: [
-        'Finn.data.WebSocketStore'
+        'Fin.data.WebSocketStore'
     ],
 
     model: 'Fin.model.Trade',
@@ -21,6 +21,6 @@ Ext.define('Finn.store.Trades', {
                 volume: d.v,
                 tradeConditions: d.c
             };
-        })
+        })[0]; // just take the first in the set so we have one per time stamp. obviously, this isn't good - just for demo simplicity
     }
 })

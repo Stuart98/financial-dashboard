@@ -1,4 +1,4 @@
-Ext.define('Finn.data.FinnhubProxy', {
+Ext.define('Fin.data.FinnhubProxy', {
     extend: 'Ext.data.proxy.Ajax',
 
     alias: 'proxy.finnhub',

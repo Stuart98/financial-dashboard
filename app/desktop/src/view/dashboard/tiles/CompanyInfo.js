@@ -2,8 +2,6 @@ Ext.define('Fin.view.dashboard.tiles.CompanyInfo', {
     extend: 'Fin.view.dashboard.Tile',
 
     alias: 'widget.dashboard-tiles-CompanyInfo',
-
-    cls: 'main-stats',
     
     tpl: [
         '<div class="row">',
@@ -21,14 +19,14 @@ Ext.define('Fin.view.dashboard.tiles.CompanyInfo', {
         '</div>'
     ],
 
-    buildData: function(record) {
-        return {
-            name: record.get('name'),
-            ticker: record.get('ticker'),
-            logo: record.get('logo'),
-            marketCap: record.get('marketCap'),
-            country: record.get('country'),
-            exchange: record.get('exchange'),
-        };
+    bind: {
+        data: {
+            name: '{record.name}',
+            ticker: '{record.ticker}',
+            logo: '{record.logo}',
+            marketCap: '{record.marketCap}',
+            country: '{record.country}',
+            exchange: '{record.exchange}',
+        }
     }
 });

@@ -6,6 +6,14 @@ Ext.define('Fin.view.dashboard.tiles.FinancialStats', {
     tpl: [
         '<div class="row full-height">',
         '   <div class="col">',
+        '       <span class="value-large">',
+        '           ${latestPrice} ',
+        '           <span class="delta <tpl if="latestPriceDirection === 1">up<tpl elseif="latestPriceDirection === -1">down<tpl else>same</tpl>">▲</span>',
+        '       </span>',
+        '       <span class="label-large">Latest Trade Price</span>',
+        '       <span class="label">{latestPriceDate:date("d-m-Y h:i:s")}</span>',
+        '   </div>',
+        '   <div class="col">',
         '       <span class="value-large">${52WeekHigh}</span>',
         '       <span class="label-large">52 Week High</span>',
         '   </div>',
@@ -24,14 +32,19 @@ Ext.define('Fin.view.dashboard.tiles.FinancialStats', {
         '</div>',
     ],
 
-    buildData: function(record) {
-        var basicFinRec = record.getBasicFinancials();
+    applyRecord: function(rec) {
+        return rec ? rec.getBasicFinancials() : rec;
+    },
 
-        return {
-            '52WeekHigh': basicFinRec.get('52WeekHigh'),
-            '52WeekLow': basicFinRec.get('52WeekLow'),
-            'netProfitMarginTTM': basicFinRec.get('netProfitMarginTTM'),
-            'revenueGrowthTTMYoy': basicFinRec.get('revenueGrowthTTMYoy')
+    bind: {
+        data: {
+            '52WeekHigh': '{record.52WeekHigh}',
+            '52WeekLow': '{record.52WeekLow}',
+            'netProfitMarginTTM': '{record.netProfitMarginTTM}',
+            'revenueGrowthTTMYoy': '{record.revenueGrowthTTMYoy}',
+            'latestPrice': '{record.latestPrice}',
+            'latestPriceDate': '{record.latestPriceDate}',
+            'latestPriceDirection': '{record.latestPriceDirection}'
         }
     }
 });

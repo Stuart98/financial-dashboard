@@ -1,4 +1,4 @@
-Ext.define('Finn.view.CompanySearch', {
+Ext.define('Fin.view.CompanySearch', {
     extend: 'Ext.panel.Panel',
 
     alias: 'widget.CompanySearch',

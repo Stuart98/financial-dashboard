@@ -5,7 +5,10 @@ Ext.define('Fin.view.dashboard.Dashboard', {
 
     requires: [
         'Fin.view.dashboard.tiles.CompanyInfo',
-        'Fin.view.dashboard.tiles.FinancialStats'
+        'Fin.view.dashboard.tiles.FinancialStats',
+        'Fin.view.dashboard.tiles.Recommendations',
+        'Fin.view.dashboard.tiles.PriceHistory',
+        'Fin.view.dashboard.tiles.LiveTrades'
     ],
 
     cls: 'dashboard',
@@ -39,7 +42,7 @@ Ext.define('Fin.view.dashboard.Dashboard', {
                 type: 'hbox',
                 align: 'stretch'
             },
-            height: 400,
+            height: 600,
             items: [
                 {
                     xtype: 'dashboard-tiles-Recommendations',
@@ -48,7 +51,20 @@ Ext.define('Fin.view.dashboard.Dashboard', {
                         record: '{companyRecord}'
                     }
                 },
-                { xtype: 'component', flex: 2 }
+                {
+                    xtype: 'dashboard-tiles-PriceHistory',
+                    flex: 1,
+                    bind: {
+                        record: '{companyRecord}'
+                    }
+                },
+                {
+                    xtype: 'dashboard-tiles-LiveTrades',
+                    flex: 1,
+                    bind: {
+                        record: '{companyRecord}'
+                    }
+                }
             ]
         }
     ]
