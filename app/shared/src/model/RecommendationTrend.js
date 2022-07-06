@@ -1,7 +1,7 @@
 Ext.define('Fin.model.RecommendationTrend', {
     extend: 'Ext.data.Model',
 
-    idProperty: 'symbol',
+    idProperty: 'period',
 
     fields: [
 
@@ -15,9 +15,6 @@ Ext.define('Fin.model.RecommendationTrend', {
             return [
                 request.getParams()[this.getIdParam()]
             ];
-        },
-        xextractResponse: function(data) {
-            return data.body.earningsCalendar;
         }
     }
 })

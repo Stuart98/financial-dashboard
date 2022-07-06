@@ -1,5 +1,9 @@
-Ext.define('Finn.model.CompanyProfile', {
+Ext.define('Fin.model.CompanyProfile', {
     extend: 'Ext.data.Model',
+
+    requires: [
+        'Fin.util.Formatter'
+    ],
 
     idProperty: 'ticker',
 
@@ -8,7 +12,19 @@ Ext.define('Finn.model.CompanyProfile', {
         'currency',
         'exchange',
         'ipo',
-        'marketCapitalization',
+        {
+            name: 'marketCapitalization',
+            // convert to dollars
+            convert: function(val) {
+                return val * 1000000;
+            }
+        },
+        {
+            name: 'marketCap',
+            calculate: function(data) {
+                return Fin.util.Formatter.numberFormat(data.marketCapitalization, 3);
+            }
+        },
         'name',
         'phone',
         'shareOutstanding',
@@ -53,30 +69,57 @@ Ext.define('Finn.model.CompanyProfile', {
         }
     ],
 
-    constructor: function() {
-        this.callParent(arguments);
+    statics: {
+        loadCompany: function(symbol, onLoadCallback) {
+            // load the two single models in parallel and wait until they're finished. then
+            // load all the stores which can come in after
+            Promise.all([
+                new Promise((resolve) => {
+                    Fin.model.CompanyProfile.load(symbol, {
+                        callback: resolve
+                    });
+                }),
+                new Promise((resolve) => {
+                    Fin.model.BasicFinancials.load(symbol, {
+                        callback: resolve
+                    })
+                })
+            ]).then((loadedRecords) => {
+                var record = loadedRecords[0];
 
-        this.load();
-        
-        this.setBasicFinancials(Fin.model.BasicFinancials.load(this.getId()));
-
-        this.earningsCalendar().getProxy().setExtraParams({
-            symbol: this.getId()
-        });
-        this.stockCandles().getProxy().setExtraParams({
-            symbol: this.getId()
-        });
-        this.recommendationTrends().getProxy().setExtraParams({
-            symbol: this.getId()
-        });
-
-
-        this.earningsCalendar().load();
-        this.stockCandles().load();
-        this.recommendationTrends().load();
-        this.trades().setSymbol(this.getId());
-        this.trades().initWebSocket();
-    }
-}, function(cls) {
+                record.setBasicFinancials(loadedRecords[1]);
     
-})
+                record.earningsCalendar().getProxy().setExtraParams({
+                    symbol: record.getId()
+                });
+                record.stockCandles().getProxy().setExtraParams({
+                    symbol: record.getId()
+                });
+                record.recommendationTrends().getProxy().setExtraParams({
+                    symbol: record.getId()
+                });
+    
+    
+                record.earningsCalendar().load();
+                record.stockCandles().load();
+                record.recommendationTrends().load();
+                record.trades().setSymbol(record.getId());
+                record.trades().initWebSocket();
+    
+                record.trades().on('datachanged', record.onTradesDataChanged, record);
+    
+                onLoadCallback(record);
+            });
+        }
+    },
+
+    onTradesDataChanged: function() {
+        // get the current price and the latest price from the end of the `trades` store
+        var currentPrice = this.getBasicFinancials().get('latestPrice') || 0;
+        var latestPrice = Math.round(this.trades().last().get('price') * 100) / 100;
+
+        this.getBasicFinancials().set('latestPrice', latestPrice);
+        this.getBasicFinancials().set('latestPriceDate', this.trades().last().get('date'));
+        this.getBasicFinancials().set('latestPriceDirection', latestPrice > currentPrice ? 1 : latestPrice < currentPrice ? -1 : 0);
+    }
+});

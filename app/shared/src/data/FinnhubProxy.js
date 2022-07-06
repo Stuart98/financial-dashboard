@@ -1,4 +1,4 @@
-Ext.define('Finn.data.FinnhubProxy', {
+Ext.define('Fin.data.FinnhubProxy', {
     extend: 'Ext.data.proxy.Ajax',
 
     alias: 'proxy.finnhub',
@@ -47,6 +47,6 @@ Ext.define('Finn.data.FinnhubProxy', {
 
     // process the response data
     extractResponseData: function(data){
-        return this.extractResponse ? this.extractResponse(data) : data.body;
+        return this.extractResponse && this.extractResponse !== Ext.emptyFn ? this.extractResponse(data) : data.body;
     }
 })
